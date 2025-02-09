@@ -7,7 +7,8 @@ server <- function(input, output, session) {
   # Initialize database connection
   db_con <- dbConnect(SQLite(), "books.db")
 
-  # Create books table if it doesn't exist
+  # Drop the table if it exists, then create it
+  dbExecute(db_con, "DROP TABLE IF EXISTS books")
   dbExecute(db_con, "
     CREATE TABLE IF NOT EXISTS books (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
