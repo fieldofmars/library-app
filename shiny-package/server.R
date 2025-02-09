@@ -40,8 +40,8 @@ server <- function(input, output, session) {
     new_title <- input$book_title
     new_author <- input$book_author
 
-    # Insert new book into the database
-    query <- sprintf("INSERT INTO books (title, author) VALUES ('%s', '%s')", new_title, new_author)
+    # Insert new book into the database, setting borrow_date and return_date to NULL
+    query <- sprintf("INSERT INTO books (title, author, borrow_date, return_date) VALUES ('%s', '%s', NULL, NULL)", new_title, new_author)
     dbExecute(db_con, query)
 
     # Refresh books data
