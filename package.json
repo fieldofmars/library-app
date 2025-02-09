@@ -1,0 +1,23 @@
+{
+  "name": "book-lending-app",
+  "version": "1.0.0",
+  "description": "R Shiny app for tracking borrowed books",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "http": "^0.0.1-security",
+    "shiny": "file:./shiny-package"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "R",
+    "Shiny",
+    "SQLite",
+    "Book",
+    "Lending"
+  ],
+  "author": "You",
+  "license": "MIT"
+}

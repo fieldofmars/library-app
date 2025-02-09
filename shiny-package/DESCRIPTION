@@ -1,0 +1,18 @@
+Package: BookLendingApp
+Title: Book Lending App
+Version: 0.1.0
+Description: A Shiny app to track book lending.
+Authors@R:
+  person(given = "Your",
+         family = "Name",
+         role = c("aut", "cre"),
+         email = "your.email@example.com")
+License: MIT
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
+Imports:
+    shiny,
+    RSQLite,
+    tidyverse
