@@ -1,5 +1,6 @@
 library(shiny)
 library(RSQLite)
+library(lubridate)
 
 # Define server logic
 server <- function(input, output, session) {
@@ -12,7 +13,9 @@ server <- function(input, output, session) {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT,
       author TEXT,
-      borrower TEXT
+      borrower TEXT,
+      borrow_date DATE,
+      return_date DATE
     )
   ")
 
@@ -24,6 +27,14 @@ server <- function(input, output, session) {
   # Initially load books
   books_data <- reactiveVal(load_books())
 
+  # Update book choices for borrowing
+  observe({
+    books <- books_data()
+    available_books <- books[is.na(books$borrower), ]
+    updateSelectInput(session, "borrow_book_id", choices = available_books$id,
+                      label = "Select Book to Borrow:")
+  })
+
   # Add book event
   observeEvent(input$add_book, {
     new_title <- input$book_title
@@ -31,6 +42,27 @@ server <- function(input, output, session) {
 
     # Insert new book into the database
     query <- sprintf("INSERT INTO books (title, author) VALUES ('%s', '%s')", new_title, new_author)
+    dbExecute(db_con, query)
+
+    # Refresh books data
+    books_data(load_books())
+  })
+
+  # Borrow book event
+  observeEvent(input$borrow_book, {
+    book_id <- input$borrow_book_id
+    borrower_name <- input$borrower_name
+    borrow_days <- input$borrow_days
+
+    borrow_date <- Sys.Date()
+    return_date <- borrow_date + days(borrow_days)
+
+    # Update book information in the database
+    query <- sprintf("
+      UPDATE books
+      SET borrower = '%s', borrow_date = '%s', return_date = '%s'
+      WHERE id = %s
+    ", borrower_name, borrow_date, return_date, book_id)
     dbExecute(db_con, query)
 
     # Refresh books data
